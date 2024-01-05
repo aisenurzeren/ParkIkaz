@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using ParkIkaz;
 
 namespace MauiApp1;
@@ -13,8 +14,8 @@ public partial class BarcodeOkuyucu : ContentPage
 
     private async void BarcodeOkuyucu_Loaded(object? sender, EventArgs e)
     {
-        var page = new IkazBilgisiGonder("zerenaisenur@gmail.com");
-        await this.Navigation.PushModalAsync(page, false);
+        //var page = new IkazBilgisiGonder("zerenaisenur@gmail.com");
+        //await this.Navigation.PushModalAsync(page, false);
     }
 
     private void cameraView_CamerasLoaded(object sender, EventArgs e)
@@ -39,8 +40,21 @@ public partial class BarcodeOkuyucu : ContentPage
         {
             if (oku) return;
             oku = true;
-            var page = new IkazBilgisiGonder(args.Result[0].Text);
-            await this.Navigation.PushModalAsync(page, false);
+            var client = new HttpClient();
+            var request = new HttpRequestMessage(HttpMethod.Get, "http://192.168.2.133:80/arac-sahibi/get?Id=" + args.Result[0].Text);
+            var response = await client.SendAsync(request);
+            var result = await response.Content.ReadAsStringAsync();
+
+            var kullanici = JsonConvert.DeserializeObject<TblAracSahibi>(result);
+            var isPageOpen = Application.Current.MainPage.Navigation.ModalStack.Any(p => p is IkazBilgisiGonder);
+
+            if (!isPageOpen)
+            {
+                // Týklama olayý gerçekleþtiðinde yeni sayfayý modal olarak açýn
+                await Application.Current.MainPage.Navigation.PushModalAsync(new IkazBilgisiGonder(kullanici));
+            }
+            //var page = new IkazBilgisiGonder(kullanici);
+            //await this.Navigation.PushModalAsync(page, false);
             await Task.Delay(1000);
             oku = false;
         });

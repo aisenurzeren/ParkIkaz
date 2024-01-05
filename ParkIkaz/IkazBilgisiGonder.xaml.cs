@@ -11,13 +11,14 @@ namespace ParkIkaz;
 
 public partial class IkazBilgisiGonder : ContentPage
 {
-    private string AliciMailAdresi {  get; set; }
+    private TblAracSahibi AracSahibi {  get; set; }
 
-    public IkazBilgisiGonder(string AliciMailAdresi)
+    public IkazBilgisiGonder(TblAracSahibi AracSahibi)
 	{
-        this.AliciMailAdresi = AliciMailAdresi;
+        this.AracSahibi = AracSahibi;
 
         InitializeComponent();
+        LabelPlaka.Text = AracSahibi.Plaka;
     }
     private async void OnSendButtonClicked(object sender, EventArgs e)
     {
@@ -29,7 +30,7 @@ public partial class IkazBilgisiGonder : ContentPage
         {
             MailMessage mail = new MailMessage();
 
-            mail.To.Add(this.AliciMailAdresi);
+            mail.To.Add(this.AracSahibi.Eposta);
             mail.From = new MailAddress("parkikazuygulamasi@gmail.com");
             mail.Subject = subjectEntry.Text;
             string Body = messageEditor.Text;
@@ -44,6 +45,7 @@ public partial class IkazBilgisiGonder : ContentPage
             smtp.EnableSsl = true;
             // smtp.EnableSsl = true;
             smtp.Send(mail);
+            await this.Navigation.PopModalAsync();
             await DisplayAlert("Hata", $"Ýkaz bilgisi gönderildi.", "Tamam");
         }
         catch (Exception ex)
@@ -53,5 +55,10 @@ public partial class IkazBilgisiGonder : ContentPage
         pageLoader.IsVisible = false;
         sendButton.IsEnabled = true;
         IsBusy = false;
+    }
+
+    private async void Click_Geri(object sender, TappedEventArgs e)
+    {
+        await this.Navigation.PopModalAsync();
     }
 }

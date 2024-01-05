@@ -8,14 +8,22 @@
     
     <Grid RowDefinitions="Auto,*">
         <Grid ColumnDefinitions="Auto,Auto,*,Auto" HeightRequest="60" BackgroundColor="#ffffff" Padding="5,0,15,0">
-            <Image Grid.Column="0" Source="geri" HeightRequest="32" WidthRequest="32" Margin="0,0,10,0"></Image>
-            <Label Grid.Column="1" Text="İkaz Gönderme Sayfası" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"></Label>
+            <Image Grid.Column="0" Source="geri" HeightRequest="32" WidthRequest="32" Margin="0,0,10,0">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="Click_Geri" />
+                </Image.GestureRecognizers>
+            </Image>
+            <Label Grid.Column="1" Text="İkaz Gönderme Sayfası" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="Click_Geri" />
+                </Label.GestureRecognizers>
+            </Label>
             <!--<Label Grid.Column="3" Text="Gönder" TextColor="DarkGreen" FontAttributes="Bold" FontSize="16" VerticalOptions="Center"></Label>-->
             <BoxView VerticalOptions="End" HeightRequest="1" Grid.Column="0" Grid.ColumnSpan="5" BackgroundColor="LightGray" Opacity="0.7" Margin="-15,0,-15,0"></BoxView>
         </Grid>
         <VerticalStackLayout Grid.Row="1" Padding="20">
-            
-        <Label Text="Konu"></Label>
+            <Label Text="" x:Name="LabelPlaka" Margin="20" HorizontalTextAlignment="Center" FontAttributes="Bold" FontSize="18"></Label>
+            <Label Text="Konu"></Label>
         <Entry 
             x:Name="subjectEntry" 
             Placeholder=""
